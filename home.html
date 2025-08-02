@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kenny AI</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+</head>
+<body>
+  <div class="sidebar">
+    <button id="newChatBtn">+ New Chat</button>
+  </div>
+
+  <div class="main">
+    <div id="chat-container"></div>
+
+    <!-- Calculator -->
+    <div id="calculator-container" class="chat-message hidden">
+      <div id="calc-display">0</div>
+      <div id="calc-buttons">
+        <button class="calc-btn">(</button>
+        <button class="calc-btn">)</button>
+        <button class="calc-btn">7</button>
+        <button class="calc-btn">8</button>
+        <button class="calc-btn">9</button>
+        <button class="calc-btn">/</button>
+        <button class="calc-btn">4</button>
+        <button class="calc-btn">5</button>
+        <button class="calc-btn">6</button>
+        <button class="calc-btn">*</button>
+        <button class="calc-btn">1</button>
+        <button class="calc-btn">2</button>
+        <button class="calc-btn">3</button>
+        <button class="calc-btn">-</button>
+        <button class="calc-btn">0</button>
+        <button class="calc-btn">.</button>
+        <button class="calc-btn" id="clear">C</button>
+        <button class="calc-btn">+</button>
+        <button class="calc-btn" id="equals">=</button>
+        <button class="calc-btn exit-calc">Exit</button>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div id="input-container">
+      <input type="text" id="user-input" placeholder="Type a message..." autocomplete="off"/>
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <script src="chatbot.js"></script>
+</body>
+</html>

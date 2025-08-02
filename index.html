@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kenny AI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(-45deg, #0a0a0a, #111122, #0a0a0a, #111122);
+      background-size: 400% 400%;
+      animation: gradientBG 10s ease infinite;
+      color: #0ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      font-size: 52px;
+      color: #0ff;
+      text-shadow: 0 0 20px #0ff;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      font-size: 13px;
+      color: #777;
+      text-shadow: 0 0 4px #0ff2;
+      margin-bottom: 40px;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 900px;
+      margin-bottom: 50px;
+    }
+
+    .feature-box {
+      background: #111;
+      border: 1px solid #0ff5;
+      border-radius: 8px;
+      padding: 20px;
+      width: 180px;
+      text-align: center;
+      color: #0ff;
+      text-shadow: 0 0 3px #0ff5;
+      box-shadow: 0 0 8px #0ff3;
+    }
+
+    .feature-box h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .feature-box p {
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .start-btn {
+      padding: 15px 40px;
+      font-size: 20px;
+      background: transparent;
+      color: #0ff;
+      border: 2px solid #0ff;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 60px;
+    }
+
+    .start-btn:hover {
+      background: #0ff;
+      color: #000;
+      box-shadow: 0 0 15px #0ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>KENNY AI</h1>
+  <p class="subtitle">by: Daniel J Kuriakose and George Eldose</p>
+
+  <div class="features">
+    <div class="feature-box">
+      <h3>Chat Powered</h3>
+      <p>Custom responses</p>
+    </div>
+    <div class="feature-box">
+      <h3>Calculator</h3>
+      <p>Pop-up calculator inside chat with keyboard input.</p>
+    </div>
+    <div class="feature-box">
+      <h3>Weather Support</h3>
+      <p>Shows real-time weather when you ask about it.</p>
+    </div>
+    <div class="feature-box">
+      <h3>Coin Flip</h3>
+      <p>Type “flip a coin” and get instant results.</p>
+    </div>
+    <div class="feature-box">
+      <h3>Dice Roll</h3>
+      <p>Type “roll a dice” to roll a visual 1-6 die.</p>
+    </div>
+    <div class="feature-box">
+      <h3>Text to Speech</h3>
+      <p>Every AI reply can be spoken with a single click.</p>
+    </div>
+  </div>
+
+  <a href="home.html">
+    <button class="start-btn">Start Now</button>
+  </a>
+</body>
+</html>
