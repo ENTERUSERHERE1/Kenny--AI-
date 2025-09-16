@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up</title>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;}
+    body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg,#0f172a,#1e293b,#334155); color:#fff;}
+
+    .signup-container {
+      background: rgba(255,255,255,0.05);
+      padding: 2.5rem;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .signup-container h2 { text-align:center; margin-bottom:1rem; font-size:1.6rem; font-weight:600; color:#e2e8f0; }
+    .avatar-row { display:flex; gap:12px; align-items:center; margin-bottom:1rem; }
+    .avatar-preview {
+      width:64px; height:64px; border-radius:50%; background: linear-gradient(135deg,#0ea5e9,#7c3aed); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:20px; color:white; overflow:hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    }
+    .upload-btn { padding:8px 12px; border-radius:10px; border:none; cursor:pointer; background:rgba(255,255,255,0.06); color:#cbd5e1; }
+    .form-group { margin-bottom:1rem; }
+    .form-group label { display:block; margin-bottom:0.4rem; font-size:0.9rem; color:#cbd5e1;}
+    .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="password"] {
+      width:100%; padding:0.75rem; border-radius:8px; border:none; outline:none; font-size:1rem; background:rgba(255,255,255,0.08); color:#fff; transition:0.2s;
+    }
+    .form-group input:focus { background:rgba(255,255,255,0.12); box-shadow:0 0 0 2px rgba(56,189,248,0.18); }
+    .btn { width:100%; padding:0.9rem; border:none; border-radius:10px; background:#38bdf8; font-size:1rem; font-weight:700; cursor:pointer; color:#0f172a; }
+    .btn:hover { background:#0ea5e9; }
+    .extra { text-align:center; margin-top:1rem; font-size:0.9rem; color:#94a3b8; }
+    .extra a { color:#38bdf8; text-decoration:none; }
+    .error { color:#ffb3b3; font-size:0.9rem; margin-top:0.5rem; display:none; }
+    input[type="file"] { display:none; }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h2>Create Account</h2>
+
+    <div class="avatar-row">
+      <div id="avatarPreview" class="avatar-preview">A</div>
+      <div>
+        <label class="upload-btn" for="avatarInput">Upload Avatar</label>
+        <input id="avatarInput" type="file" accept="image/*">
+        <div style="margin-top:8px;color:#94a3b8;font-size:0.85rem">Or avatar will be generated from initials</div>
+      </div>
+    </div>
+
+    <form id="signupForm" autocomplete="off">
+      <div class="form-group">
+        <label for="name">Username</label>
+        <input type="text" id="name" placeholder="Choose a username" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="Enter your email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Create a password" required />
+      </div>
+
+      <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" placeholder="Confirm your password" required />
+      </div>
+
+      <div class="error" id="errorMsg"></div>
+
+      <button type="submit" class="btn">Sign Up</button>
+
+      <div class="extra">
+        <p>Already have an account? <a href="home.html">Log In</a></p>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Helper: draw initials avatar on a canvas and return dataURL
+    function generateInitialsAvatar(initials) {
+      const size = 128;
+      const canvas = document.createElement('canvas');
+      canvas.width = size; canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      // background gradient
+      const g = ctx.createLinearGradient(0,0,size,size);
+      g.addColorStop(0, '#0ea5e9');
+      g.addColorStop(1, '#7c3aed');
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,size,size);
+
+      // circle mask
+      ctx.globalCompositeOperation = 'destination-in';
+      ctx.beginPath(); ctx.arc(size/2, size/2, size/2, 0, Math.PI*2); ctx.fill();
+
+      // initials
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
+      ctx.font = '64px "Segoe UI", Tahoma, sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(initials, size/2, size/2 + 2);
+
+      return canvas.toDataURL('image/png');
+    }
+
+    const avatarInput = document.getElementById('avatarInput');
+    const avatarPreview = document.getElementById('avatarPreview');
+    let selectedAvatarDataUrl = null; // if user uploads an image
+
+    function updatePreviewFromDataUrl(dataUrl) {
+      avatarPreview.style.backgroundImage = `url(${dataUrl})`;
+      avatarPreview.textContent = '';
+      avatarPreview.style.backgroundSize = 'cover';
+      avatarPreview.style.backgroundPosition = 'center';
+    }
+
+    avatarInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        selectedAvatarDataUrl = reader.result;
+        updatePreviewFromDataUrl(selectedAvatarDataUrl);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // update initials preview as user types username
+    const nameInput = document.getElementById('name');
+    nameInput.addEventListener('input', () => {
+      if (selectedAvatarDataUrl) return; // uploaded image wins
+      const initials = getInitials(nameInput.value || 'A');
+      const dataUrl = generateInitialsAvatar(initials);
+      avatarPreview.style.backgroundImage = `url(${dataUrl})`;
+      avatarPreview.textContent = '';
+    });
+
+    function getInitials(name) {
+      const parts = name.trim().split(/\s+/).filter(Boolean);
+      if (parts.length === 0) return 'A';
+      if (parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+
+    // initial preview
+    (function initPreview(){
+      const dataUrl = generateInitialsAvatar('A');
+      updatePreviewFromDataUrl(dataUrl);
+    })();
+
+    const form = document.getElementById('signupForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      errorMsg.style.display = 'none';
+      const username = nameInput.value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm-password').value;
+
+      if (!username) { showError('Please pick a username.'); return; }
+      if (!email) { showError('Please enter an email.'); return; }
+      if (password.length < 6) { showError('Password must be at least 6 characters.'); return; }
+      if (password !== confirm) { showError('Passwords do not match.'); return; }
+
+      // determine avatar: uploaded -> selectedAvatarDataUrl, otherwise generate from initials
+      let avatarPromise;
+      if (selectedAvatarDataUrl) {
+        avatarPromise = Promise.resolve(selectedAvatarDataUrl);
+      } else {
+        const initials = getInitials(username);
+        avatarPromise = Promise.resolve(generateInitialsAvatar(initials));
+      }
+
+      avatarPromise.then(avatarDataUrl => {
+        // store to localStorage (in real app, you'd send to backend)
+        const userObj = {
+          username,
+          email,
+          avatar: avatarDataUrl,
+          createdAt: Date.now()
+        };
+        localStorage.setItem('kenny_user', JSON.stringify(userObj));
+
+        // redirect to home (home will read localStorage and show profile)
+        window.location.href = 'home.html';
+      });
+    });
+
+    function showError(text) {
+      errorMsg.textContent = text;
+      errorMsg.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
